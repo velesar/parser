@@ -1,0 +1,11 @@
+Joseph: the script will have to parse about 5000 XMLs
+they are located in folders like this: authors/book1/*.xml
+author2/book5/*.xml
+etc
+so function 1 is a folder listing method..
+you could also use find . -name "*.xml", but it'd be nicer in python
+function 2 is to parse the XML (i'll send it to you now) and produce a word document with the library: python-doc
+
+[11:00:29] Joseph: the word document should be placed in a folder called: output/author - year - book_title
+yeah sure
+the XML is pretty clean and should be ok
