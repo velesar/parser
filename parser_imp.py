@@ -75,8 +75,7 @@ def parse():
 			self.contenttypes = contenttypes()
 			self.websettings = websettings()
 			self.wordrelationships = wordrelationships(self.relationships)
-			import pudb
-			pudb.set_trace()
+			
 			if not os.path.exists(output_dir):
 				os.makedirs(output_dir)
 			savedocx(self.document, self.coreprops, self.appprops, self.contenttypes, self.websettings, self.wordrelationships, '%s/%s %s %s.docx' %(output_dir, meta['booktitle'], meta['author'], meta['year']))
@@ -89,7 +88,7 @@ def parse():
 			self.doc = DocCreator()
 			self.doc.doc_create()
 			pict = find_picture()
-			if len(pict) > 0 and pict[:pict.rfind('/')] == file_xml[:file_xml.rfind('/')]:
+			if pict and pict[:pict.rfind('/')] == file_xml[:file_xml.rfind('/')]:
 			 	self.doc.insert_picture(pict)
 			self.doc.create_heading(result['meta']['booktitle'])
 			self.doc.create_heading(result['meta']['author'])
@@ -148,8 +147,11 @@ def parse():
 
   
 	def my_picture(relationshiplist, picname, picdescription, output_dir, pixelwidth=None, pixelheight=None, nochangeaspect=True, nochangearrowheads=True):
-		
-		shutil.copyfile(picname, output_dir+picname[picname.rfind('/'):])
+		media_dir = join(template_dir, 'word', 'media')
+		if not os.path.isdir(media_dir):
+			os.mkdir(media_dir)
+		shutil.copyfile(picname, join(media_dir, picname.split('/')[-1]))
+		#shutil.copyfile(picname, output_dir+picname[picname.rfind('/'):])
 		if not pixelwidth or not pixelheight:
 		    # If not, get info from the picture itself
 		    pixelwidth, pixelheight = Image.open(picname).size[0:2]
@@ -165,7 +167,7 @@ def parse():
 		picrelid = 'rId'+str(len(relationshiplist)+1)
 		relationshiplist.append([
 		    'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
-		    'media/'+picname])
+		    'media/'+picname.split('/')[-1]])
 
 		# There are 3 main elements inside a picture
 		# 1. The Blipfill - specifies how the image fills the picture area (stretch, tile, etc.)
